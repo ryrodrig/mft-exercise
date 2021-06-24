@@ -23,14 +23,14 @@ public class ExerciseController {
     }
 
     @GetMapping("/{exerciseId}")
-    private ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable("exerciseId") UUID exerciseId) {
+    public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable("exerciseId") UUID exerciseId) {
         ExerciseDTO exercise = exerciseService.getExerciseById(exerciseId);
         return ResponseEntity.ok(exercise);
     }
 
     @PostMapping
     //     @RequestBody is needed to map the request body to the DTO.. If not provided exerciseDTO will be null
-    private ResponseEntity<Void> saveExercise(@RequestBody ExerciseDTO exerciseDTO) {
+    public ResponseEntity<Void> saveExercise(@RequestBody ExerciseDTO exerciseDTO) {
         ExerciseDTO savedExercise = exerciseService.save(exerciseDTO);
         HttpHeaders httpHeaders = new HttpHeaders();
         // Post should return a location header.
@@ -39,16 +39,16 @@ public class ExerciseController {
 
     @PutMapping("/{exerciseId}")
 //     @RequestBody is needed to map the request body to the DTO.. If not provided exerciseDTO will be null
-    private ResponseEntity updateExercise(@PathVariable("exerciseId") UUID id,@RequestBody ExerciseDTO exerciseDTO) {
+    public ResponseEntity updateExercise(@PathVariable("exerciseId") UUID id,@RequestBody ExerciseDTO exerciseDTO) {
         exerciseService.update(id, exerciseDTO);
         // ideal to return noContent is all was well (204).
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{exerciseId}")
+    @DeleteMapping("/{exerciseId}")
     // Another way to return status code of 204 if all was successful.
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void deleteExercise(UUID id) {
+    public void deleteExercise(@PathVariable("exerciseId") UUID id) {
         exerciseService.deleteById(id);
     }
 }
