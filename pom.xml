@@ -15,6 +15,7 @@
 	<description>Excersie Micro service</description>
 	<properties>
 		<java.version>11</java.version>
+		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -55,6 +56,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+<!-- allows easier mapping between DTO's and Entities -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -69,6 +81,50 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<!-- plugin are actually that perform work.. a maven-clean-plugin performs cleaning of the target folders -->
+			<!-- maven-compiler-plugin is used to compile the source code of Maven Project and can be customized accordingly -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<!-- Used to generate the mapper implementation class during build using annotation process concept of java.
+						  Annotations can be processed at runtime using reflection but it would take time at startup, hence an alternate approach is to use
+						  annotation processors at compile-time.
+						  InOrder to perform , we need to define a class that extends AbstractProcessor and register it at compile time.. The processor
+						  contains and annotation to filter . Within Maven you can register such classes using annotationProcess tag..
+						  In below case we need mapstruct-processor and lombok's processor to be regisetered which will modify the code at compile time
+						  During build annotation processors are called by compiler when one of the configured annotations on the processor are found.The processor
+						  then generates code or calls other annotation processors based on the logic within process().
+						 -->
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+<!--						Need to tie mapstruct with lombok -->
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<!-- Needed when using lombok 1.18.16 and above -->
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+					</annotationProcessorPaths>
+					<compilerArgs>
+<!--						one of the options of making the mapper a spring component.. Adds @Component on the mapper.-->
+						<compilerArg>
+							-Amapstruct.defaultComponentModel=spring
+						</compilerArg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>
