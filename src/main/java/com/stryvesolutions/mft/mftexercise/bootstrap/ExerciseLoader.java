@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 // class implementing CommandLineRunner is invoked once the spring context is loaded.
 // Mark this class as @component as spring will need to load this class.
-@Component
+//@Component  -- commented after adding data.sql within resources folder.
 public class ExerciseLoader implements CommandLineRunner {
 
     private final ExerciseRepository exerciseRepository;

@@ -32,7 +32,8 @@ class ExerciseControllerTest {
     MockMvc mockMvc;
 
     // Since @WebMVCTest only loads web layer, any service layer dependencies should be mocked..
-    // Use @MockBean. if not application context cannot start.
+    // Use @MockBean to provide instance of the bean..
+    // usually mock repository beans.
     @MockBean
     ExerciseService exerciseService;
 
@@ -47,7 +48,7 @@ class ExerciseControllerTest {
 
     @Test
     void getExerciseById() throws Exception {
-        when(exerciseService.getExerciseById(any())).thenReturn(ExerciseDTO.builder().exerciseName("testExercise").exerciseDescription("Test Exercise").equipmentNeeded(false).build());
+        when(exerciseService.getExerciseById(any(),any())).thenReturn(ExerciseDTO.builder().exerciseName("testExercise").exerciseDescription("Test Exercise").equipmentNeeded(false).build());
         mockMvc.perform(get("/v1/api/exercise/" + UUID.randomUUID().toString())).andExpect(status().isOk());
     }
 

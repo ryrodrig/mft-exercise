@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -24,6 +25,8 @@ public class Exercise {
     @GeneratedValue(generator = "exerciseIdGenerator")
     // Hibernate annotation to generate a value
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    // needed to fix an issue with mapping UUID to object.
+    @Type(type="uuid-char")
 //    Is used to specify the mapped column for a persistent property or field. If no Column annotation is specified, the default values apply.
     @Column(name = "exerciseId", length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
     private UUID id;

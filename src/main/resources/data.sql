@@ -1,0 +1,2 @@
+INSERT INTO exercise(exercise_id, version, create_date, update_date, exercise_name, exercise_description, body_part,
+                     equipment_needed) values('77f3eddb-1e9b-482c-bb00-168b864fc836',1,CURRENT_TIMESTAMP ,null,'KickBoxing','Cardio Exercise','Full', true);

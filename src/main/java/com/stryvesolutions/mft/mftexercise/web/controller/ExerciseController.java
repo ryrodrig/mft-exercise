@@ -5,7 +5,10 @@ import com.stryvesolutions.mft.mftexercise.web.model.ErrorDTO;
 import com.stryvesolutions.mft.mftexercise.web.model.ExerciseDTO;
 import com.stryvesolutions.mft.mftexercise.web.model.ExercisePagedList;
 import com.stryvesolutions.mft.mftexercise.web.model.validationGroups.Equipments;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +22,34 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/api/exercise")
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
 
-    @Autowired
-    public ExerciseController(ExerciseService exerciseService) {
-        this.exerciseService = exerciseService;
+//    @Autowired
+//    public ExerciseController(ExerciseService exerciseService) {
+//        this.exerciseService = exerciseService;
+//    }
+
+    @GetMapping
+    public ResponseEntity<ExercisePagedList> getExercises(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+                                                          @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                                          @RequestParam(value = "exerciseName", required = false) String exerciseName,
+                                                          @RequestParam(value = "bodyPart", required = false) String bodyPart,
+                                                          @RequestParam(value = "refreshCache", required = false,
+                                                                  defaultValue = "false") Boolean refreshCache) {
+        ExercisePagedList exercisesPageList = exerciseService.getExercises(PageRequest.of(0, 10),refreshCache);
+        return ResponseEntity.ok(exercisesPageList);
     }
 
     @GetMapping("/{exerciseId}")
-    public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable("exerciseId") UUID exerciseId) {
-        ExerciseDTO exercise = exerciseService.getExerciseById(exerciseId);
+    public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable("exerciseId") UUID exerciseId,
+                                                       @RequestParam(value = "refreshCache", required = false,
+                                                               defaultValue = "false") Boolean refreshCache) {
+        ExerciseDTO exercise = exerciseService.getExerciseById(exerciseId,refreshCache);
         return ResponseEntity.ok(exercise);
     }
 
